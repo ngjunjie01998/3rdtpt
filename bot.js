@@ -105,9 +105,11 @@ bot.onText(/(.+)$/, function (msg, match) {
         });
         
         // if no items were found for the given time 
-        if (itemsFound != itemTitle)
+        if (itemsFound == 0)
         {
-            
+            if (list<0 || list>24)
+                formattedAnswer = "";
+            else 
                 formattedAnswer = "Input /help for guidance";
                 
             // output current answer
