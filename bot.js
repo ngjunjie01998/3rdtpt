@@ -79,7 +79,7 @@ bot.onText(/(.+)$/, function (msg, match) {
                         formattedAnswer += "\n\n";
                         
                     itemsFound++;
-                    formattedAnswer =  item.content.$t; // add item content, '\u27a1' is the arrow emoji
+                    formattedAnswer +=  item.content.$t; // add item content, '\u27a1' is the arrow emoji
                 }
            
         });
