@@ -17,13 +17,13 @@ else {
 //var Bot = require('node-telegram-bot-api'),
 //    bot = new Bot(config.TelegramToken, { polling: true });
 
-console.log('secon-bot server started...');
+console.log('3rdTptbot started...');
 
 // Make sure it is public or set to Anyone with link can view 
 // "od6" is the fist worksheet in the spreadsheet
 var url = "https://spreadsheets.google.com/feeds/list/" + config.googleSheetKey + "/od6/public/values?alt=json";
 
-var moment = require('moment-timezone');
+//var moment = require('moment-timezone');
 
 bot.onText(/(.+)$/, function (msg, match) {
     // keywords are anything typed in
@@ -39,59 +39,59 @@ bot.onText(/(.+)$/, function (msg, match) {
         }
         
         var parsed = JSON.parse(body);
-        var targetTime = NaN;
+        var list = NaN;
         if (!isNaN(keywords))   // isNaN returns false if the value is number
         {
             try{
-                targetTime = parseInt(keywords, 10);
+                list = parseInt(keywords, 10);
             }
             catch(e){
-                targetTime = NaN;
+                list = NaN;
             }
         }
         
-        if (isNaN(targetTime))
-            targetTime = -1;
+        if (isNaN(list))
+            list = -1;
         
         var formattedAnswer = "";
         
         // debug purposes: echo from id: 
         // formattedAnswer += "\nMsg.from.id=" + msg.from.id + "\n";
     
-        var currentHours = parseInt(moment().tz(config.confTimeZone).format('HH'),10);
+   /*    var currentHours = parseInt(moment().tz(config.confTimeZone).format('HH'),10);
         var currentMinutes = parseInt(moment().tz(config.confTimeZone).format('mm'),10);
-        // console.log("Current hours: " + currentHours);
+      */  // console.log("Current hours: " + currentHours);
         var currentAnswer = "";
         
         var itemsFound = 0;
         // sending answers
         parsed.feed.entry.forEach(function(item){
                 // get the time(in hours) from the very first column
-                var itemTime = NaN;
+                var msg = NaN;
                 var itemTitle = item.title.$t
                 try{
-                    itemTime = parseInt(itemTitle, 10);
+                    msg = parseInt(itemTitle, 10);
                 }
                 catch(e)
                 {
-                    itemTime = NaN;
+                    msg = NaN;
                 }
                 
                 if (
-                    (!isNaN(itemTime) && itemTime == targetTime) ||
-                    (isNaN(itemTime) && itemTitle.toLowerCase().trim() == keywords.toLowerCase().trim())
+                    (!isNaN(msg) && msg == list) ||
+                    (isNaN(msg) && itemTitle.toLowerCase().trim() == keywords.toLowerCase().trim())
                     )
                 {
                     // add the line break if not the first answer
                     if (itemsFound==0) 
-                        formattedAnswer += "At " + targetTime + " these talks will take place:\n\n";
+                        formattedAnswer += "";
                     else 
                         formattedAnswer += "\n\n";
                         
                     itemsFound++;
-                    formattedAnswer += '\u27a1' + item.content.$t; // add item content, '\u27a1' is the arrow emoji
+                    formattedAnswer +=  item.content.$t; // add item content, '\u27a1' is the arrow emoji
                 }
-                else if (currentHours == itemTime) // else collect items for the current hour
+              /*  else if (currentHours == msg) // else collect items for the current hour
                 {
                     if (currentAnswer == '')
                         currentAnswer == 'Starting from ' + currentHours + " h the following talks are goinf:\n\n";
@@ -100,24 +100,24 @@ bot.onText(/(.+)$/, function (msg, match) {
                         
                     currentAnswer += '\u27a1' + item.content.$t; // get item content, '\u27a1' is the arrow emoji
                 }
-                
+                */
                 // else doing nothing
         });
         
         // if no items were found for the given time 
         if (itemsFound == 0)
         {
-            if (targetTime<0 || targetTime>24)
-                formattedAnswer = "Enter the time to show talks or write 'Hi'.\n\n";
+            if (list<0 || list>24)
+                formattedAnswer = "";
             else 
-                formattedAnswer = "Can't find events for the given time ( " + targetTime+ " ч)";
+                formattedAnswer = "Input /help for guidance";
                 
             // output current answer
-            if (currentAnswer != '')
+     /*       if (currentAnswer != '')
             {
                 formattedAnswer += "Hi! As of " + currentHours + ":" + currentMinutes + " " + config.confTimeZone+ " these talks are going:\n";
                 formattedAnswer += currentAnswer;
-            }
+            }*/
         }
     
         // send message telegram finally
