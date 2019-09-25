@@ -2,6 +2,7 @@
 // Created by Evgenii Mironichev, Copyright 2016,
 // based on this awesome tutorial: https://mvalipour.github.io/node.js/2015/11/10/build-telegram-bot-nodejs-heroku/
 // Edited by Ng Jun Jie
+// Saftey Texts by Melvin
 
 var config = require('./config'); // rename config.js.example into config.js and set keys and tokens inside it
 
@@ -56,20 +57,19 @@ bot.onText(/(.+)$/, function (msg, match) {
         var itemsFound = 0;
         // sending answers
         parsed.feed.entry.forEach(function(item){
-                // get the time(in hours) from the very first column
-                var msg = NaN;
+                var msge = NaN;
                 var itemTitle = item.title.$t
                 try{
-                    msg = parseInt(itemTitle, 10);
+                    msge = parseInt(itemTitle, 10);
                 }
                 catch(e)
                 {
-                    msg = NaN;
+                    msge = NaN;
                 }
                 
                 if (
-                    (!isNaN(msg) && msg == list) ||
-                    (isNaN(msg) && itemTitle.toLowerCase().trim() == keywords.toLowerCase().trim())
+                    (!isNaN(msge) && msge == list) ||
+                    (isNaN(msge) && itemTitle.toLowerCase().trim() == keywords.toLowerCase().trim())
                     )
                 {
                     // add the line break if not the first answer
