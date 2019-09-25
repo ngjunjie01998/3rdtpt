@@ -1,5 +1,7 @@
+// Credits
 // Created by Evgenii Mironichev, Copyright 2016,
 // based on this awesome tutorial: https://mvalipour.github.io/node.js/2015/11/10/build-telegram-bot-nodejs-heroku/
+// Edited by Ng Jun Jie
 
 var config = require('./config'); // rename config.js.example into config.js and set keys and tokens inside it
 
@@ -14,16 +16,12 @@ else {
   bot = new Bot(config.TelegramToken, { polling: true });
 }
 
-//var Bot = require('node-telegram-bot-api'),
-//    bot = new Bot(config.TelegramToken, { polling: true });
 
 console.log('3rdTptbot started...');
 
-// Make sure it is public or set to Anyone with link can view 
-// "od6" is the fist worksheet in the spreadsheet
+
 var url = "https://spreadsheets.google.com/feeds/list/" + config.googleSheetKey + "/od6/public/values?alt=json";
 
-//var moment = require('moment-timezone');
 
 bot.onText(/(.+)$/, function (msg, match) {
     // keywords are anything typed in
@@ -54,15 +52,7 @@ bot.onText(/(.+)$/, function (msg, match) {
             list = -1;
         
         var formattedAnswer = "";
-        
-        // debug purposes: echo from id: 
-        // formattedAnswer += "\nMsg.from.id=" + msg.from.id + "\n";
-    
-   /*    var currentHours = parseInt(moment().tz(config.confTimeZone).format('HH'),10);
-        var currentMinutes = parseInt(moment().tz(config.confTimeZone).format('mm'),10);
-      */  // console.log("Current hours: " + currentHours);
-        var currentAnswer = "";
-        
+                
         var itemsFound = 0;
         // sending answers
         parsed.feed.entry.forEach(function(item){
@@ -91,17 +81,7 @@ bot.onText(/(.+)$/, function (msg, match) {
                     itemsFound++;
                     formattedAnswer +=  item.content.$t; // add item content, '\u27a1' is the arrow emoji
                 }
-              /*  else if (currentHours == msg) // else collect items for the current hour
-                {
-                    if (currentAnswer == '')
-                        currentAnswer == 'Starting from ' + currentHours + " h the following talks are goinf:\n\n";
-                    else 
-                        currentAnswer += "\n\n"; 
-                        
-                    currentAnswer += '\u27a1' + item.content.$t; // get item content, '\u27a1' is the arrow emoji
-                }
-                */
-                // else doing nothing
+           
         });
         
         // if no items were found for the given time 
@@ -112,12 +92,6 @@ bot.onText(/(.+)$/, function (msg, match) {
             else 
                 formattedAnswer = "Input /help for guidance";
                 
-            // output current answer
-     /*       if (currentAnswer != '')
-            {
-                formattedAnswer += "Hi! As of " + currentHours + ":" + currentMinutes + " " + config.confTimeZone+ " these talks are going:\n";
-                formattedAnswer += currentAnswer;
-            }*/
         }
     
         // send message telegram finally
