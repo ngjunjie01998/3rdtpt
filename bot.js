@@ -95,9 +95,9 @@ bot.onText(/(.+)$/, function (msg, match) {
         }
 
         // send message telegram finally
-        var newanswer = formattedAnswer.replace("_cokwr: ","")
-:
-        bot.sendMessage(msg.chat.id, formattedAnswer).then(function () {
+        var newanswer = formattedAnswer.replace("_cokwr: ","");
+
+        bot.sendMessage(msg.chat.id, newanswer).then(function () {
             // reply sent!
         });
 
