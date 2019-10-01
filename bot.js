@@ -88,9 +88,9 @@ bot.onText(/(.+)$/, function (msg, match) {
         if (itemsFound == 0)
         {
             if (list<0 || list>24)
-                formattedAnswer = "Input /help for guidance";
+                formattedAnswer = "Sorry, I don't quite understand you.";
             else
-                formattedAnswer = "Input /help for guidance";
+                formattedAnswer = "Sorry, I don't quite understand you.";
 
         }
 
