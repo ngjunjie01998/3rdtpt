@@ -67,16 +67,15 @@ bot.onText(/(.+)$/, function (msg, match) {
                     msge = NaN;
                 }
 
-                if (
-                    (!isNaN(msge) && msge == list) ||
-                    (isNaN(msge) && itemTitle.toLowerCase().trim() == keywords.toLowerCase().trim())
+                if ( 
+                    (keywords.toLowerCase().match(itemTitle.toLowerCase()) 	)
                     )
                 {
                     // add the line break if not the first answer
                     if (itemsFound==0)
                         formattedAnswer += "";
                     else
-                        formattedAnswer += "\n\n";
+                        formattedAnswer += "";
 
                     itemsFound++;
                     formattedAnswer +=  item.content.$t; // add item content, '\u27a1' is the arrow emoji
@@ -95,7 +94,7 @@ bot.onText(/(.+)$/, function (msg, match) {
         }
 
         // send message telegram finally
-        var newanswer = formattedAnswer.replace("_cokwr: ","");
+        var newanswer = formattedAnswer.replace(/_cokwr: /gi,"");
 
         bot.sendMessage(msg.chat.id, newanswer).then(function () {
             // reply sent!
