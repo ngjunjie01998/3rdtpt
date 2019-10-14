@@ -1,10 +1,11 @@
+// TelegramBot (ExcellenceSafetyBot)
 // Credits
 // Created by Evgenii Mironichev, Copyright 2016,
-// based on this awesome tutorial: https://mvalipour.github.io/node.js/2015/11/10/build-telegram-bot-nodejs-heroku/
 // Edited by Ng Jun Jie
 // Saftey Texts by Melvin
+// Route Card by Owen,Ernest,Jun Jie
 
-var config = require('./config'); // rename config.js.example into config.js and set keys and tokens inside it
+var config = require('./config'); // rename config.js.example into config.js and set keys and tokens inside of it
 
 var Bot = require('node-telegram-bot-api');
 var bot;
@@ -18,18 +19,18 @@ else {
 }
 
 
-console.log('3rdTptbot started...');
+console.log('ExcellenceSafetyBot commence...');
 
-
+// url link for google sheet with easy configuration ()./config)
 var url = "https://spreadsheets.google.com/feeds/list/" + config.googleSheetKey + "/od6/public/values?alt=json";
 
 
 bot.onText(/(.+)$/, function (msg, match) {
-    // keywords are anything typed in
+    // keywords are anything typed in by user
   var keywords = match[1];
   var request = require("request");
 
-    // send request to retrieve the spreadsheet as the JSON
+    // request to retrieve the spreadsheet as the JSON
     request(url, function (error, response, body) {
         if (error || response.statusCode != 200) {
             console.log('Error: '+error); // Show the error
@@ -55,7 +56,7 @@ bot.onText(/(.+)$/, function (msg, match) {
         var formattedAnswer = "";
 
         var itemsFound = 0;
-        // sending answers
+        // getting data from google sheet and format them
         parsed.feed.entry.forEach(function(item){
                 var msge = NaN;
                 var itemTitle = item.title.$t
@@ -67,23 +68,23 @@ bot.onText(/(.+)$/, function (msg, match) {
                     msge = NaN;
                 }
 
-                if ( 
-                    (keywords.toLowerCase().match(itemTitle.toLowerCase()) 	)
+                if (
+                    (keywords.toLowerCase().match(itemTitle.toLowerCase()) 	) // if keyword match the specific keyword from google sheet(lower case)
                     )
                 {
-                    // add the line break if not the first answer
+
                     if (itemsFound==0)
                         formattedAnswer += "";
                     else
                         formattedAnswer += "";
 
                     itemsFound++;
-                    formattedAnswer +=  item.content.$t; // add item content, '\u27a1' is the arrow emoji
+                    formattedAnswer +=  item.content.$t; // add item content from googlesheet
                 }
 
         });
 
-        // if no items were found for the given time
+        // if no content is found from googlesheet for keyword
         if (itemsFound == 0)
         {
             if (list<0 || list>24)
@@ -93,8 +94,8 @@ bot.onText(/(.+)$/, function (msg, match) {
 
         }
 
-        // send message telegram finally
-        var newanswer = formattedAnswer.replace(/_cokwr: /gi,"");
+        // prompt telegrambot to send message
+        var newanswer = formattedAnswer.replace(/_cokwr: /gi,""); // to remove header
 
         bot.sendMessage(msg.chat.id, newanswer).then(function () {
             // reply sent!
